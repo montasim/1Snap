@@ -22,13 +22,13 @@ colors:
 typography:
   display:
     fontFamily: "'Instrument Sans Variable', system-ui, sans-serif"
-    fontSize: 'clamp(3rem, 4.45vw, 4rem)'
+    fontSize: 'clamp(2.125rem, 3vw, 2.371875rem)'
     fontWeight: 690
     lineHeight: 0.96
     letterSpacing: '-0.065em'
   headline:
     fontFamily: "'Instrument Sans Variable', system-ui, sans-serif"
-    fontSize: 'clamp(2.35rem, 4.25vw, 3.5rem)'
+    fontSize: 'clamp(1.25rem, 2vw, 1.5rem)'
     fontWeight: 660
     lineHeight: 1.02
     letterSpacing: '-0.055em'
@@ -216,8 +216,8 @@ The Capture Orange palette reads like a production proof: clean neutral surfaces
 
 ### Hierarchy
 
-- **Display** (Instrument Sans Variable, weight 690, 48–64px, line-height 0.96, letter-spacing -0.065em): The compact landing-page proposition; permitted to switch one line to Capture Orange.
-- **Headline** (Instrument Sans Variable, weight 660, 38–56px, line-height 1.02, letter-spacing -0.055em): Major landing section statements, set as dense editorial blocks rather than oversized marketing headlines.
+- **Display** (Instrument Sans Variable, weight 690, 34–38px, line-height 0.96, letter-spacing -0.065em): The compact landing-page proposition; permitted to switch one line to Capture Orange.
+- **Headline** (Instrument Sans Variable, weight 660, 20–24px, line-height 1.02, letter-spacing -0.055em): Major landing section statements, set as compact editorial blocks rather than oversized marketing headlines.
 - **Result Heading** (Instrument Sans Variable, weight 700, 36px, letter-spacing -0.04em): Empty and error-state titles; direct, compact, and never promotional.
 - **Body** (Instrument Sans Variable, weight 400, 15px, line-height 1.65): Dense extension explanation and recovery copy.
 - **Body Large** (Instrument Sans Variable, weight 400, 17px, line-height 1.65): Landing-page section introductions.
