@@ -378,7 +378,7 @@ p {
 
 .workflow,
 .privacy-section,
-.install-section {
+.release-section {
   padding-block: clamp(92px, 10vw, 132px);
 }
 
@@ -397,7 +397,7 @@ h2 {
 .section-intro > p,
 .result-copy > p,
 .privacy-copy > p:last-child,
-.install-copy > p {
+.release-copy > p {
   max-width: 570px;
   margin: 23px 0 0;
   color: var(--muted);
@@ -565,11 +565,11 @@ h2 {
   line-height: 1.55;
 }
 
-.install-section {
+.release-section {
   padding-top: 0;
 }
 
-.install-panel {
+.release-panel {
   display: grid;
   grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
   gap: clamp(56px, 8vw, 108px);
@@ -579,18 +579,18 @@ h2 {
   background: var(--surface-warm);
 }
 
-.install-copy {
+.release-copy {
   max-width: 470px;
 }
 
-.install-list {
+.release-list {
   margin: 0;
   padding: 0;
   border-top: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
   list-style: none;
 }
 
-.install-list li {
+.release-list li {
   display: grid;
   grid-template-columns: 120px 1fr;
   gap: 24px;
@@ -598,26 +598,16 @@ h2 {
   border-bottom: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line));
 }
 
-.install-list strong {
+.release-list strong {
   color: var(--accent-dark);
   font-size: 0.9rem;
 }
 
-.install-list p {
+.release-list p {
   margin: 0;
   color: var(--muted);
   font-size: 0.9rem;
   line-height: 1.6;
-}
-
-code {
-  padding: 2px 6px;
-  border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--line));
-  border-radius: 6px;
-  background: color-mix(in srgb, var(--surface) 75%, var(--accent-soft));
-  color: var(--ink);
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: 0.78rem;
 }
 
 .site-footer {
@@ -770,13 +760,13 @@ code {
 
   .result-layout,
   .privacy-section,
-  .install-panel {
+  .release-panel {
     grid-template-columns: 1fr;
   }
 
   .result-copy,
   .privacy-copy,
-  .install-copy {
+  .release-copy {
     max-width: 650px;
   }
 
@@ -784,7 +774,7 @@ code {
     order: -1;
   }
 
-  .install-panel {
+  .release-panel {
     gap: 44px;
   }
 }
@@ -861,7 +851,7 @@ code {
 
   .workflow,
   .privacy-section,
-  .install-section,
+  .release-section,
   .result-section {
     padding-block: 78px;
   }
@@ -926,15 +916,15 @@ code {
     font-size: 1.55rem;
   }
 
-  .install-section {
+  .release-section {
     padding-top: 0;
   }
 
-  .install-panel {
+  .release-panel {
     padding: 30px 24px;
   }
 
-  .install-list li {
+  .release-list li {
     grid-template-columns: 1fr;
     gap: 8px;
   }

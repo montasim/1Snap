@@ -22,8 +22,9 @@
   "scripts": {
     "dev": "vite --port 3000",
     "icons": "node scripts/generate-favicons.mjs",
+    "product-preview": "node scripts/generate-result-preview.mjs",
     "social-preview": "node scripts/generate-social-preview.mjs",
-    "build": "pnpm icons && pnpm social-preview && vite build",
+    "build": "pnpm icons && pnpm product-preview && pnpm social-preview && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
   },

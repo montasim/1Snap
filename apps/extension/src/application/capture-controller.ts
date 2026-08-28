@@ -47,7 +47,7 @@ async function restorePage(tabId: number): Promise<void> {
 async function setProgress(tabId: number, current: number, total: number): Promise<void> {
   const percentage = Math.round((current / total) * 100);
   await Promise.allSettled([
-    chrome.action.setBadgeBackgroundColor({ color: '#6A3FB5', tabId }),
+    chrome.action.setBadgeBackgroundColor({ color: '#C74924', tabId }),
     chrome.action.setBadgeText({ text: `${percentage}`, tabId }),
     chrome.action.setTitle({ title: `1Snap is capturing · ${current} of ${total}`, tabId }),
   ]);
@@ -104,7 +104,7 @@ export async function captureFullPage(tab: chrome.tabs.Tab): Promise<void> {
   activeCaptures.add(tabId);
   let prepared = false;
   try {
-    await chrome.action.setBadgeBackgroundColor({ color: '#6A3FB5', tabId });
+    await chrome.action.setBadgeBackgroundColor({ color: '#C74924', tabId });
     await chrome.action.setBadgeText({ text: '0', tabId });
     const metrics = await runOnPage(tabId, { type: 'prepare' });
     prepared = true;

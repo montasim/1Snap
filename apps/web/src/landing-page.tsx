@@ -7,7 +7,7 @@ const captureSteps = [
   },
   {
     title: 'Let it travel',
-    text: '1Snap measures each frame, scrolls the page, and restores your position.',
+    text: '1Snap scrolls from top to bottom, then returns you to where you were.',
   },
   {
     title: 'Keep one PNG',
@@ -18,7 +18,7 @@ const captureSteps = [
 const resultActions = [
   {
     title: 'Inspect',
-    text: 'See the source, dimensions, height, file size, time, and captured frame count.',
+    text: 'Check where the image came from, when it was captured, and its dimensions and file size.',
   },
   {
     title: 'Copy',
@@ -46,11 +46,11 @@ export function LandingPage() {
               1Snap scrolls, stitches, and opens a clean PNG you can inspect, copy, or download.
             </p>
             <div className="hero-actions">
-              <a className="button button-primary" href="#install">
-                Install 1Snap
+              <a className="button button-primary" href="#result">
+                See the result
               </a>
               <a className="button button-secondary" href="#how-it-works">
-                See the capture flow
+                How it works
               </a>
             </div>
           </div>
@@ -82,16 +82,16 @@ export function LandingPage() {
         <section className="fact-band" aria-label="1Snap product facts">
           <div className="page-shell fact-band-inner">
             <p>
-              <strong>Local stitching</strong>
-              Frames stay in Chrome.
+              <strong>Private by default</strong>
+              Screenshots stay on your device.
             </p>
             <p>
               <strong>One toolbar click</strong>
               Capture starts on demand.
             </p>
             <p>
-              <strong>One useful file</strong>
-              The result is a standard PNG.
+              <strong>Ready as a PNG</strong>
+              Copy it or save it right away.
             </p>
           </div>
         </section>
@@ -150,52 +150,47 @@ export function LandingPage() {
           <div className="privacy-copy">
             <p className="eyebrow">Private by design</p>
             <h2>A screenshot tool without a cloud-shaped catch.</h2>
-            <p>
-              Recent frames are assembled in extension-owned browser storage and remain on your
-              device.
-            </p>
+            <p>Your screenshots are put together inside Chrome and stay on your device.</p>
           </div>
 
           <dl className="privacy-facts">
             <div>
               <dt>Accounts</dt>
               <dd>None</dd>
-              <p>Install it and capture.</p>
+              <p>No sign-up needed.</p>
             </div>
             <div>
               <dt>Uploads</dt>
               <dd>None</dd>
-              <p>Frames are stitched locally.</p>
+              <p>Your screenshots stay in your browser.</p>
             </div>
             <div>
               <dt>Analytics</dt>
               <dd>None</dd>
-              <p>Your capture is not telemetry.</p>
+              <p>What you capture is not tracked.</p>
             </div>
           </dl>
         </section>
 
-        <section id="install" className="install-section page-shell">
-          <div className="install-panel">
-            <div className="install-copy">
-              <h2>Load it once. Capture whenever.</h2>
+        <section id="release" className="release-section page-shell">
+          <div className="release-panel">
+            <div className="release-copy">
+              <h2>Coming soon to Chrome.</h2>
               <p>
-                1Snap is available as an unpacked Chrome extension while its store listing is
-                prepared.
+                1Snap is getting ready for the Chrome Web Store. Once it launches, one toolbar click
+                will capture the whole page and open a finished PNG.
               </p>
             </div>
 
-            <ol className="install-list">
-              <InstallItem label="Build">
-                Run <code>pnpm build:extension</code>
-              </InstallItem>
-              <InstallItem label="Open Chrome">
-                Visit <code>chrome://extensions</code> and enable Developer mode
-              </InstallItem>
-              <InstallItem label="Load 1Snap">
-                Choose <code>apps/extension/.output</code> as an unpacked extension
-              </InstallItem>
-            </ol>
+            <ul className="release-list">
+              <ReleaseItem label="One click">Start from the 1Snap button in Chrome.</ReleaseItem>
+              <ReleaseItem label="Stays private">
+                Your page is processed on your device, not uploaded.
+              </ReleaseItem>
+              <ReleaseItem label="Ready to use">
+                Copy the finished image or download it as a PNG.
+              </ReleaseItem>
+            </ul>
           </div>
         </section>
       </main>
@@ -231,8 +226,8 @@ function SiteHeader() {
           <a href="#result">Result page</a>
           <a href="#privacy">Privacy</a>
         </nav>
-        <a className="header-cta" href="#install">
-          Install 1Snap
+        <a className="header-cta" href="#release">
+          Coming soon
         </a>
       </div>
     </header>
@@ -248,7 +243,7 @@ function Brand() {
   );
 }
 
-function InstallItem({ label, children }: { label: string; children: React.ReactNode }) {
+function ReleaseItem({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <li>
       <strong>{label}</strong>

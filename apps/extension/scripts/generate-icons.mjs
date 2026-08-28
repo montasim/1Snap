@@ -4,7 +4,7 @@ import sharp from 'sharp';
 
 const source = resolve('public/icon/source.svg');
 const provenance =
-  'Direct Sharp export from the authored 1Snap SVG: a bold white numeral one with a capture corner on process aubergine, finished with one registration-amber target.';
+  'Direct Sharp export from the authored 1Snap SVG: a bold white numeral one with a capture corner on capture orange, finished with one press-ink registration point.';
 
 for (const size of [16, 32, 48, 128]) {
   const output = resolve(`public/icon/${size}.png`);

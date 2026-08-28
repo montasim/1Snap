@@ -13,12 +13,12 @@ colors:
   rule-gray-web: '#ded9e3'
   rule-gray-strong-result: '#968a83'
   rule-gray-strong-web: '#bdb5c7'
-  proof-aubergine: '#6a3fb5'
-  proof-aubergine-dark: '#4d2b88'
-  registration-amber: '#e07a2e'
+  capture-orange: '#c74924'
+  capture-orange-dark: '#973317'
+  registration-ink: '#17211d'
   capture-green: '#2b7a55'
   stop-red: '#b13a4b'
-  pale-aubergine-hover: '#f2eafb'
+  pale-orange-hover: '#fbe2d7'
 typography:
   display:
     fontFamily: "'Instrument Sans Variable', system-ui, sans-serif"
@@ -82,13 +82,13 @@ spacing:
   section-major: '108px'
 components:
   button-primary-web:
-    backgroundColor: '{colors.proof-aubergine}'
+    backgroundColor: '{colors.capture-orange}'
     textColor: '{colors.white-paper}'
     typography: '{typography.control}'
     rounded: '{rounded.control-web}'
     padding: '0 20px'
   button-primary-web-hover:
-    backgroundColor: '{colors.proof-aubergine-dark}'
+    backgroundColor: '{colors.capture-orange-dark}'
     textColor: '{colors.white-paper}'
     typography: '{typography.control}'
     rounded: '{rounded.control-web}'
@@ -101,18 +101,18 @@ components:
     padding: '0 20px'
   button-action-result:
     backgroundColor: 'transparent'
-    textColor: '{colors.proof-aubergine}'
+    textColor: '{colors.capture-orange}'
     typography: '{typography.action}'
     rounded: '{rounded.control-result}'
     padding: '8px 12px'
   button-action-result-hover:
-    backgroundColor: '{colors.pale-aubergine-hover}'
-    textColor: '{colors.proof-aubergine-dark}'
+    backgroundColor: '{colors.pale-orange-hover}'
+    textColor: '{colors.capture-orange-dark}'
     typography: '{typography.action}'
     rounded: '{rounded.control-result}'
     padding: '8px 12px'
   button-primary-result:
-    backgroundColor: '{colors.proof-aubergine}'
+    backgroundColor: '{colors.capture-orange}'
     textColor: '{colors.white-paper}'
     typography: '{typography.control}'
     rounded: '{rounded.control-result}'
@@ -163,22 +163,22 @@ The screenshot is always the dominant artifact. Controls stay compact and extens
 - Measured proof geometry with rulers, crop corners, registration targets, and metadata rails.
 - Flat instrumentation organized around one deliberately lifted screenshot sheet.
 - Instrument Sans for product language and IBM Plex Mono for measurements and capture facts.
-- Shared Process Aubergine, Press Ink, Registration Amber, and Proof Green roles across a warm extension surface and white website.
+- Shared Capture Orange, Press Ink, and Proof Green roles across a warm extension surface and white website.
 - Compact literal actions, low radii, thin rules, and responsive disclosure instead of card-based composition.
 
 ## Colors
 
-The Aubergine Proof palette reads like a production proof: clean neutral surfaces and Press Ink do most of the work, Process Aubergine carries action and identity, and semantic colors appear only when their meaning is literal.
+The Capture Orange palette reads like a production proof: clean neutral surfaces and Press Ink do most of the work, Capture Orange carries action and identity, and semantic colors appear only when their meaning is literal.
 
 ### Primary
 
-- **Process Aubergine** (#6a3fb5): The main action and identity color for wordmarks, primary controls, links, frame progress, dimensions, and focus outlines.
-- **Dark Aubergine** (#4d2b88): The interaction partner reserved for aubergine hover and active states.
-- **Pale Aubergine Hover** (#f2eafb): The quiet extension action-hover field; use it behind aubergine utility actions, not as a broad surface color.
+- **Capture Orange** (#c74924): The main action and identity color for marks, primary controls, links, frame progress, dimensions, and focus outlines.
+- **Dark Capture Orange** (#973317): The interaction partner reserved for orange hover and active states.
+- **Pale Orange Hover** (#fbe2d7): The quiet extension action-hover field; use it behind orange utility actions, not as a broad surface color.
 
 ### Secondary
 
-- **Registration Amber** (#e07a2e): A rare technical accent used only for registration targets, the brand mark's registration point, and proof notation. It is not a general highlight or decorative brand color.
+- **Registration Ink** (#17211d): The dark registration point inside the orange brand mark and a precise contrast detail, not a second accent color.
 
 ### Tertiary
 
@@ -201,7 +201,7 @@ The Aubergine Proof palette reads like a production proof: clean neutral surface
 
 ### Named Rules
 
-**The Registration Exception Rule.** Registration Amber appears only in the brand mark, small proof marks, or similarly literal technical notation; never use it to fill buttons, sections, or decorative flourishes.
+**The Registration Exception Rule.** Registration Ink appears only in the brand mark's registration point. Proof marks use Capture Orange so the product has one coherent accent.
 
 **The State Color Rule.** Proof Green means completed or ready, Stop Red means stopped or failed, and neither color communicates state without text or an icon.
 
@@ -216,7 +216,7 @@ The Aubergine Proof palette reads like a production proof: clean neutral surface
 
 ### Hierarchy
 
-- **Display** (Instrument Sans Variable, weight 690, 48–64px, line-height 0.96, letter-spacing -0.065em): The compact landing-page proposition; permitted to switch one line to Process Aubergine.
+- **Display** (Instrument Sans Variable, weight 690, 48–64px, line-height 0.96, letter-spacing -0.065em): The compact landing-page proposition; permitted to switch one line to Capture Orange.
 - **Headline** (Instrument Sans Variable, weight 660, 38–56px, line-height 1.02, letter-spacing -0.055em): Major landing section statements, set as dense editorial blocks rather than oversized marketing headlines.
 - **Result Heading** (Instrument Sans Variable, weight 700, 36px, letter-spacing -0.04em): Empty and error-state titles; direct, compact, and never promotional.
 - **Body** (Instrument Sans Variable, weight 400, 15px, line-height 1.65): Dense extension explanation and recovery copy.
@@ -271,19 +271,19 @@ Lines are structural: 1px warm-gray dividers and borders, 1px ruler ticks, and 1
 ### Buttons
 
 - **Shape:** Compact, low-radius controls with an 8px corner and literal text labels.
-- **Primary web CTA:** 48px minimum height with 11px × 18px padding, white on Process Aubergine, and a small authored arrow. Hover shifts to Dark Aubergine and lifts by 2px.
+- **Primary web CTA:** 48px minimum height with 11px × 18px padding, white on Capture Orange, and a small authored arrow. Hover shifts to Dark Capture Orange and lifts by 2px.
 - **Secondary web action:** Shares the primary CTA's size and geometry, using a strong Rule Gray border over an off-white surface; hover resolves to white.
-- **Result action:** 42px minimum height with 8px × 12px padding, a 20px authored line icon, and Process Aubergine text on a transparent utility rail. Hover adds the Pale Aubergine Hover field and a 1px lift.
-- **Recovery action:** 44px minimum height with 10px × 18px padding, white on Process Aubergine, used only in the stopped state.
-- **Focus:** All interactive elements receive a 2px Process Aubergine outline with a 4px offset. Never remove the text label from a primary action; the result header may visually hide labels below 680px while preserving them for assistive technology.
+- **Result action:** 42px minimum height with 8px × 12px padding, a 20px authored line icon, and Capture Orange text on a transparent utility rail. Hover adds the Pale Orange Hover field and a 1px lift.
+- **Recovery action:** 44px minimum height with 10px × 18px padding, white on Capture Orange, used only in the stopped state.
+- **Focus:** All interactive elements receive a 2px Capture Orange outline with a 4px offset. Never remove the text label from a primary action; the result header may visually hide labels below 680px while preserving them for assistive technology.
 
 ### Navigation
 
-The website header is a 68px sticky three-column rail: brand at the start, compact text links centered, and one Process Aubergine install action at the end. Below 900px the center navigation hides and the brand/CTA pair remains. The extension header follows the same literal utility grammar at 64px but prioritizes capture actions over site navigation.
+The website header is a 68px sticky three-column rail: brand at the start, compact text links centered, and one Capture Orange install action at the end. Below 900px the center navigation hides and the brand/CTA pair remains. The extension header follows the same literal utility grammar at 64px but prioritizes capture actions over site navigation.
 
 ### Capture Status
 
-Ready state combines a small Proof Green dot, the words “Capture ready,” a strong Rule Gray separator, and Process Aubergine tabular dimensions. The status is centered in the desktop result header and removed at 1050px before actions or branding are compromised.
+Ready state combines a small Proof Green dot, the words “Capture ready,” a strong Rule Gray separator, and Capture Orange tabular dimensions. The status is centered in the desktop result header and removed at 1050px before actions or branding are compromised.
 
 ### Measurement Ruler & Proof Marks
 
@@ -295,11 +295,11 @@ The real stitched PNG is a block-level responsive image inside a square Warm Pap
 
 ### Metadata Rail
 
-The fixed 64px footer segments frame count, source, dimensions, height, format, file size, time, and final state with strong 1px rules. Values use tabular numbers; the primary Process Aubergine modifier identifies source and capture facts, while Proof Green identifies completion. At narrow widths, disclosure collapses instead of wrapping the rail into cards.
+The fixed 64px footer segments frame count, source, dimensions, height, format, file size, time, and final state with strong 1px rules. Values use tabular numbers; the primary Capture Orange modifier identifies source and capture facts, while Proof Green identifies completion. At narrow widths, disclosure collapses instead of wrapping the rail into cards.
 
 ### Loading, Notices & Errors
 
-Loading uses four 16px × 48px Process Aubergine frame bars with a 1.2s staggered stitching motion and explicit local-assembly copy. Notices are compact Press Ink fields with an 8px radius. Error state uses the Stop Red close icon, a direct title, plain-language recovery copy, and one Process Aubergine recovery button. Reduced-motion preference shortens all animation and transitions to 0.01ms with one iteration.
+Loading uses four 16px × 48px Capture Orange frame bars with a 1.2s staggered stitching motion and explicit local-assembly copy. Notices are compact Press Ink fields with an 8px radius. Error state uses the Stop Red close icon, a direct title, plain-language recovery copy, and one Capture Orange recovery button. Reduced-motion preference shortens all animation and transitions to 0.01ms with one iteration.
 
 ### Named Rules
 
@@ -310,8 +310,8 @@ Loading uses four 16px × 48px Process Aubergine frame bars with a 1.2s staggere
 ### Do:
 
 - **Do** keep the real screenshot or a code-native measured capture demonstration as the dominant visual object.
-- **Do** use Process Aubergine for identity, primary action, focus, and measured capture facts.
-- **Do** reserve Registration Amber for the brand registration point and tiny technical marks, and Proof Green for literal completion.
+- **Do** use Capture Orange for identity, primary action, focus, and measured capture facts.
+- **Do** reserve Press Ink for the brand registration point, and Proof Green for literal completion.
 - **Do** generate ruler labels, dimensions, file size, frame count, source, and time from real capture data.
 - **Do** collapse secondary metadata and ornament before compromising the screenshot, action labels, or keyboard focus.
 
@@ -320,5 +320,5 @@ Loading uses four 16px × 48px Process Aubergine frame bars with a 1.2s staggere
 - **Don't** build generic SaaS card grids, glass panels, soft purple gradients, or oversized pill controls.
 - **Don't** surround the capture with fake editing tools, decorative production jargon, or a decorative screenshot mockup.
 - **Don't** spread shadows across ordinary sections or containers; large-area lift belongs to the captured-page sheet.
-- **Don't** use Registration Amber as a broad accent or rely on green/red without text and icon support.
+- **Don't** introduce a competing purple or blue identity color, or rely on green/red without text and icon support.
 - **Don't** flag Instrument Sans merely because its name contains “Instrument”; it is the deliberate self-hosted brand face.
