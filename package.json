@@ -1,0 +1,47 @@
+{
+  "name": "1snap-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A local-first Chrome extension that captures a complete web page as one PNG.",
+  "homepage": "https://1snap.netlify.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/montasim/1Snap.git"
+  },
+  "bugs": {
+    "url": "https://github.com/montasim/1Snap/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Montasim",
+    "url": "https://github.com/montasim"
+  },
+  "funding": {
+    "type": "individual",
+    "url": "https://www.supportkori.com/montasim"
+  },
+  "packageManager": "pnpm@11.7.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "pnpm dev:extension",
+    "dev:extension": "pnpm --filter @1snap/extension dev",
+    "dev:web": "pnpm --filter @1snap/web dev",
+    "build:extension": "pnpm --filter @1snap/extension build",
+    "build:web": "pnpm --filter @1snap/web build",
+    "build": "pnpm build:extension && pnpm build:web",
+    "release:extension": "pnpm --filter @1snap/extension zip && node scripts/package-extension-release.mjs",
+    "verify:release": "node scripts/verify-extension-release.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "pnpm --filter @1snap/extension typecheck && pnpm --filter @1snap/web typecheck",
+    "test": "pnpm --filter @1snap/extension test",
+    "check": "pnpm format:check && pnpm typecheck && pnpm test && pnpm build"
+  },
+  "devDependencies": {
+    "jszip": "^3.10.1",
+    "prettier": "^3.9.5"
+  }
+}

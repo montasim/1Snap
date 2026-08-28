@@ -1,0 +1,44 @@
+{
+  "name": "@1snap/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "The product website for the 1Snap full-page screenshot extension.",
+  "homepage": "https://1snap.netlify.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/montasim/1Snap.git",
+    "directory": "apps/web"
+  },
+  "bugs": {
+    "url": "https://github.com/montasim/1Snap/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Montasim",
+    "url": "https://github.com/montasim"
+  },
+  "funding": "https://www.supportkori.com/montasim",
+  "scripts": {
+    "dev": "vite --port 3000",
+    "icons": "node scripts/generate-favicons.mjs",
+    "social-preview": "node scripts/generate-social-preview.mjs",
+    "build": "pnpm icons && pnpm social-preview && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fontsource-variable/instrument-sans": "^5.2.8",
+    "@fontsource/ibm-plex-mono": "^5.2.6",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "sharp": "^0.35.4",
+    "typescript": "^6.0.3",
+    "vite": "^8.1.5"
+  }
+}

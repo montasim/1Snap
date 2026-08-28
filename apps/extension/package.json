@@ -1,0 +1,51 @@
+{
+  "name": "@1snap/extension",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Capture a complete web page and turn it into a local PNG proof.",
+  "homepage": "https://1snap.netlify.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/montasim/1Snap.git",
+    "directory": "apps/extension"
+  },
+  "bugs": {
+    "url": "https://github.com/montasim/1Snap/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Montasim",
+    "url": "https://github.com/montasim"
+  },
+  "funding": "https://www.supportkori.com/montasim",
+  "scripts": {
+    "dev": "wxt",
+    "prepare": "wxt prepare",
+    "icons": "node scripts/generate-icons.mjs",
+    "build": "pnpm icons && wxt build",
+    "zip": "pnpm icons && wxt zip",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@fontsource-variable/instrument-sans": "^5.2.8",
+    "@fontsource/ibm-plex-mono": "^5.2.6",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/chrome": "^0.1.33",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@wxt-dev/module-react": "^1.2.2",
+    "happy-dom": "^20.10.6",
+    "sharp": "^0.35.3",
+    "typescript": "^6.0.3",
+    "vite": "^8.1.5",
+    "vitest": "^4.1.10",
+    "wxt": "^0.20.27"
+  }
+}
