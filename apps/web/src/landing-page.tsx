@@ -223,8 +223,6 @@ export function LandingPage() {
           </nav>
         </div>
       </footer>
-
-      <SupportWidget />
     </>
   );
 }
@@ -262,25 +260,5 @@ function ReleaseItem({ label, children }: { label: string; children: React.React
       <strong>{label}</strong>
       <p>{children}</p>
     </li>
-  );
-}
-
-function SupportWidget() {
-  return (
-    <a
-      className="support-widget"
-      href={supportUrl}
-      target="_blank"
-      rel="noreferrer"
-      aria-label="Support 1Snap on SupportKori"
-    >
-      <span className="support-mark" aria-hidden="true">
-        K
-      </span>
-      <span>
-        <strong>Support 1Snap</strong>
-        <small>SupportKori</small>
-      </span>
-    </a>
   );
 }

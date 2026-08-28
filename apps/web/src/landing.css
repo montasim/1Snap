@@ -645,63 +645,6 @@ h2 {
   font-size: 0.84rem;
 }
 
-.support-widget {
-  position: fixed;
-  z-index: 30;
-  right: 22px;
-  bottom: 22px;
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  min-height: 54px;
-  padding: 8px 14px 8px 8px;
-  border: 1px solid var(--line-strong);
-  border-radius: 14px;
-  background: color-mix(in srgb, var(--surface) 94%, transparent);
-  box-shadow: 0 18px 50px -28px var(--shadow);
-  backdrop-filter: blur(14px);
-  transition:
-    border-color 180ms ease,
-    transform 180ms ease;
-}
-
-.support-widget:hover {
-  border-color: var(--accent);
-  transform: translateY(-2px);
-}
-
-.support-widget:active {
-  transform: translateY(0) scale(0.98);
-}
-
-.support-mark {
-  display: grid;
-  width: 36px;
-  height: 36px;
-  place-items: center;
-  border-radius: 9px;
-  background: var(--accent);
-  color: #fffdfa;
-  font-family: 'IBM Plex Mono', ui-monospace, monospace;
-  font-size: 0.86rem;
-  font-weight: 500;
-}
-
-.support-widget > span:last-child {
-  display: grid;
-}
-
-.support-widget strong {
-  font-size: 0.76rem;
-  line-height: 1.2;
-}
-
-.support-widget small {
-  margin-top: 2px;
-  color: var(--muted);
-  font-size: 0.68rem;
-}
-
 @keyframes copy-enter {
   from {
     opacity: 0;
@@ -957,17 +900,6 @@ h2 {
   .site-footer nav {
     flex-wrap: wrap;
     gap: 14px 24px;
-  }
-
-  .support-widget {
-    right: 14px;
-    bottom: 14px;
-    min-height: 48px;
-    padding: 6px;
-  }
-
-  .support-widget > span:last-child {
-    display: none;
   }
 }
 
