@@ -583,6 +583,22 @@ h2 {
   max-width: 470px;
 }
 
+.release-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.release-meta {
+  margin: 18px 0 0;
+  color: var(--accent-dark);
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
 .release-list {
   margin: 0;
   padding: 0;
@@ -812,6 +828,10 @@ h2 {
   }
 
   .hero-actions {
+    display: grid;
+  }
+
+  .release-actions {
     display: grid;
   }
 
