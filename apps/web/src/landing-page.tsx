@@ -1,7 +1,5 @@
 const supportUrl = 'https://www.supportkori.com/montasim';
-const releaseUrl = 'https://github.com/montasim/1Snap/releases/tag/v0.1.0';
-const releaseDownloadUrl =
-  'https://github.com/montasim/1Snap/releases/download/v0.1.0/1snap-v0.1.0-chrome.zip';
+const releaseUrl = 'https://github.com/montasim/1Snap/releases/latest';
 
 const captureSteps = [
   {
@@ -49,7 +47,7 @@ export function LandingPage() {
               1Snap scrolls, stitches, and opens a clean PNG you can inspect, copy, or download.
             </p>
             <div className="hero-actions">
-              <a className="button button-primary" href={releaseDownloadUrl}>
+              <a className="button button-primary" href={releaseUrl}>
                 Download 1Snap
               </a>
               <a className="button button-secondary" href="#how-it-works">
@@ -180,18 +178,18 @@ export function LandingPage() {
             <div className="release-copy">
               <h2>Download 1Snap for Chrome.</h2>
               <p>
-                Get the verified v0.1.0 release as a ZIP. It includes the complete extension and
+                Get the latest verified release as a ZIP. It includes the complete extension and
                 keeps every screenshot on your device.
               </p>
               <div className="release-actions">
-                <a className="button button-primary" href={releaseDownloadUrl}>
-                  Download v0.1.0
+                <a className="button button-primary" href={releaseUrl}>
+                  Download latest
                 </a>
                 <a className="button button-secondary" href={releaseUrl}>
                   View release notes
                 </a>
               </div>
-              <p className="release-meta">v0.1.0 · Chrome 120+ · ZIP · 300 KB</p>
+              <p className="release-meta">Latest release · Chrome 120+ · ZIP</p>
             </div>
 
             <ul className="release-list">
@@ -218,7 +216,7 @@ export function LandingPage() {
           <nav aria-label="Footer navigation">
             <a href="#how-it-works">How it works</a>
             <a href="#privacy">Privacy</a>
-            <a href={releaseDownloadUrl}>Download</a>
+            <a href={releaseUrl}>Download</a>
             <a href={supportUrl} target="_blank" rel="noreferrer">
               Support
             </a>
@@ -241,7 +239,7 @@ function SiteHeader() {
           <a href="#result">Result page</a>
           <a href="#privacy">Privacy</a>
         </nav>
-        <a className="header-cta" href={releaseDownloadUrl}>
+        <a className="header-cta" href={releaseUrl}>
           Download 1Snap
         </a>
       </div>
