@@ -1,6 +1,6 @@
 {
   "name": "@1snap/extension",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
   "description": "Capture a complete web page and turn it into a local PNG proof.",

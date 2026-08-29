@@ -1,6 +1,6 @@
 {
   "name": "@1snap/web",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
   "description": "The product website for the 1Snap full-page screenshot extension.",

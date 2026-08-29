@@ -8,14 +8,14 @@
 1Snap is a focused Chrome extension for people who need the whole page, not only the
 visible viewport. One toolbar click captures a regular web page from top to bottom, restores
 the original scroll position, stitches the frames locally, and opens a dedicated result page
-for inspection, copying, or downloading.
+for inspection, annotation, copying, or downloading.
 
-![1Snap result page showing a measured full-page screenshot and image actions](apps/web/public/screenshots/1snap-result.png)
+![1Snap result page showing annotation tools over a measured full-page screenshot](apps/web/public/screenshots/1snap-result.png)
 
 ## Why 1Snap?
 
-Browser screenshots normally stop at the viewport, while many full-page tools add editing,
-accounts, or cloud storage around a simple job. 1Snap keeps the workflow deliberately
+Browser screenshots normally stop at the viewport, while many full-page tools add heavy editing
+suites, accounts, or cloud storage around a simple job. 1Snap keeps the workflow deliberately
 small:
 
 - Start one capture from the Chrome toolbar.
@@ -28,7 +28,10 @@ small:
 - Full vertical capture of regular `http` and `https` pages
 - Automatic handling of scroll positions and repeated fixed or sticky elements
 - Local frame storage and in-browser PNG stitching
+- Non-destructive marker, highlight, and border annotations with local autosave
+- Selection, movement, resizing, color and width controls, undo, redo, clear, cancel, and done
 - Copy and download actions with clear success or recovery notices
+- Original-resolution annotated PNG export through both Copy and Download
 - Measured result view with dimensions, height, file size, source, time, and frame count
 - Responsive loading, ready, and error states
 - SupportKori links on both the product website and extension result page
@@ -63,7 +66,7 @@ The unpacked Chrome extension is written to `apps/extension/.output`.
 1. Open a normal web page and keep its tab active.
 2. Click the 1Snap toolbar icon.
 3. Keep the page active while the toolbar badge reports progress.
-4. Use the new result tab to inspect, copy, or download the final PNG.
+4. Use the new result tab to inspect, annotate, copy, or download the final PNG.
 
 1Snap restores the page's original scroll position and temporarily changed presentation
 after the capture finishes or stops.
@@ -77,19 +80,22 @@ flowchart LR
     C --> D[Store recent frames in IndexedDB]
     D --> E[Stitch frames on a local canvas]
     E --> F[Open the result page]
-    F --> G[Inspect, copy, or download PNG]
+    F --> G[Inspect and annotate]
+    G --> H[Copy or download PNG]
 ```
 
 The background capture controller coordinates the active tab, capture rate, progress badge,
 and recovery. A page script pauses animation, waits for visible images and fonts, manages
 fixed or sticky elements, and restores the page afterward. The result tab reads the saved
-capture, draws the frames onto a canvas, and exposes the finished PNG.
+capture, draws the frames onto a canvas, and exposes the finished PNG. Annotations stay as local
+vector data while editing and are composed into the original-resolution PNG only for Copy or
+Download.
 
 ## Privacy and permissions
 
 1Snap does not require an account, analytics service, cloud upload, or remote processing.
-The three newest captures are retained in extension-owned IndexedDB storage so their result
-tabs can be assembled locally; older records are pruned automatically.
+The three newest captures and their annotations are retained in extension-owned IndexedDB storage
+so their result tabs can be assembled locally; older records are pruned automatically.
 
 | Permission         | Why it is needed                                              |
 | ------------------ | ------------------------------------------------------------- |
@@ -173,7 +179,7 @@ The production site is deployed at [1snap.netlify.app](https://1snap.netlify.app
 
 ## Status and limitations
 
-1Snap `0.1.0` is a pre-release and is not yet listed in the Chrome Web Store.
+1Snap `0.1.1` is a pre-release and is not yet listed in the Chrome Web Store.
 
 - Chrome-owned pages, extension pages, and other restricted URLs cannot be captured.
 - The source tab must remain active while Chrome captures each visible frame.
@@ -189,6 +195,9 @@ The production site is deployed at [1snap.netlify.app](https://1snap.netlify.app
 Read [SUPPORT.md](SUPPORT.md) for capture-reporting details and supported help paths. Report
 security concerns privately according to [SECURITY.md](SECURITY.md); do not include sensitive
 page content in a public report.
+
+Source code, issues, and published releases are available in the
+[1Snap GitHub repository](https://github.com/montasim/1Snap).
 
 ## Contributing
 
