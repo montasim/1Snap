@@ -34,11 +34,12 @@
     "build": "pnpm build:extension && pnpm build:web",
     "release:extension": "pnpm --filter @1snap/extension zip && node scripts/package-extension-release.mjs",
     "verify:release": "node scripts/verify-extension-release.mjs",
+    "verify:web-csp": "node scripts/verify-web-csp.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "pnpm --filter @1snap/extension typecheck && pnpm --filter @1snap/web typecheck",
     "test": "pnpm --filter @1snap/extension test",
-    "check": "pnpm format:check && pnpm typecheck && pnpm test && pnpm build"
+    "check": "pnpm format:check && pnpm verify:web-csp && pnpm typecheck && pnpm test && pnpm build"
   },
   "devDependencies": {
     "jszip": "^3.10.1",
