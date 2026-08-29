@@ -5,11 +5,21 @@ import { ResultApp } from '../src/ui/result/result-app';
 
 const mocks = vi.hoisted(() => ({
   getCapture: vi.fn(),
+  getAnnotationDocument: vi.fn(),
+  saveAnnotationDocument: vi.fn(),
+  renderAnnotatedPng: vi.fn(),
   stitchCapture: vi.fn(),
 }));
 
 vi.mock('../src/infrastructure/capture-store', () => ({ getCapture: mocks.getCapture }));
+vi.mock('../src/infrastructure/annotation-store', () => ({
+  getAnnotationDocument: mocks.getAnnotationDocument,
+  saveAnnotationDocument: mocks.saveAnnotationDocument,
+}));
 vi.mock('../src/application/stitch-capture', () => ({ stitchCapture: mocks.stitchCapture }));
+vi.mock('../src/application/render-annotations', () => ({
+  renderAnnotatedPng: mocks.renderAnnotatedPng,
+}));
 
 const record: CaptureRecord = {
   id: 'capture-1',
@@ -35,6 +45,9 @@ describe('ResultApp', () => {
     vi.clearAllMocks();
     window.history.replaceState({}, '', '/result.html?capture=capture-1');
     mocks.getCapture.mockResolvedValue(record);
+    mocks.getAnnotationDocument.mockResolvedValue(null);
+    mocks.saveAnnotationDocument.mockResolvedValue(undefined);
+    mocks.renderAnnotatedPng.mockResolvedValue(new Blob(['annotated'], { type: 'image/png' }));
     mocks.stitchCapture.mockResolvedValue({
       blob: new Blob(['stitched'], { type: 'image/png' }),
       width: 1_200,
@@ -65,7 +78,47 @@ describe('ResultApp', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Copy' }));
     await waitFor(() => expect(clipboardWrite).toHaveBeenCalledOnce());
     expect(screen.getByText('Image copied')).toBeInTheDocument();
+    expect(mocks.renderAnnotatedPng).not.toHaveBeenCalled();
     expect(screen.queryByRole('button', { name: 'Share' })).not.toBeInTheDocument();
+  });
+
+  it('opens the annotation toolbar with the approved tools', async () => {
+    render(<ResultApp />);
+
+    fireEvent.click(await screen.findByRole('button', { name: 'Annotate' }));
+
+    expect(screen.getByRole('region', { name: 'Annotation tools' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Select' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Marker' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Highlight' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Border' })).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('composes saved annotations before copying', async () => {
+    mocks.getAnnotationDocument.mockResolvedValue({
+      version: 1,
+      imageWidth: 1_200,
+      imageHeight: 1_800,
+      items: [
+        {
+          id: 'border-1',
+          kind: 'border',
+          color: '#c74924',
+          strokeWidth: 8,
+          x: 100,
+          y: 120,
+          width: 300,
+          height: 180,
+        },
+      ],
+    });
+    render(<ResultApp />);
+
+    fireEvent.click(await screen.findByRole('button', { name: 'Copy' }));
+
+    await waitFor(() => expect(mocks.renderAnnotatedPng).toHaveBeenCalledOnce());
+    await waitFor(() => expect(screen.getByText('Annotated image copied')).toBeInTheDocument());
+    expect(clipboardWrite).toHaveBeenCalledOnce();
   });
 
   it('keeps the stitching state visible while a capture is loading', () => {

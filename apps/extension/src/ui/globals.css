@@ -64,6 +64,15 @@ a {
   outline-offset: 4px;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 ::-webkit-scrollbar {
   width: 12px;
 }
@@ -129,6 +138,11 @@ a {
   box-shadow: 0 4px 12px rgba(37, 130, 75, 0.25);
 }
 
+.ready-dot.is-editing {
+  background: var(--process);
+  box-shadow: 0 4px 12px rgba(199, 73, 36, 0.25);
+}
+
 .summary-rule {
   width: 1px;
   height: 22px;
@@ -171,6 +185,166 @@ a {
 .action-button:hover {
   color: var(--process-dark);
   background: #fbe2d7;
+  transform: translateY(-1px);
+}
+
+.action-button.is-active {
+  color: var(--process-dark);
+  background: #fbe2d7;
+}
+
+.annotation-toolbar {
+  position: sticky;
+  z-index: 29;
+  top: 64px;
+  border-bottom: 1px solid var(--line-strong);
+  background: rgba(255, 254, 253, 0.98);
+  box-shadow: 0 8px 22px rgba(47, 62, 55, 0.05);
+}
+
+.annotation-toolbar-inner {
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 7px 24px;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
+}
+
+.annotation-tool-group,
+.annotation-colors,
+.annotation-history-actions,
+.annotation-finish-actions {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 4px;
+}
+
+.annotation-tool,
+.toolbar-icon-button,
+.annotation-cancel,
+.annotation-done {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 7px;
+  color: var(--muted-ink);
+  background: transparent;
+  font-size: 13px;
+  font-weight: 620;
+  white-space: nowrap;
+  transition:
+    color 150ms ease-out,
+    background-color 150ms ease-out,
+    transform 150ms ease-out;
+}
+
+.annotation-tool:hover,
+.toolbar-icon-button:hover:not(:disabled),
+.annotation-cancel:hover {
+  color: var(--ink);
+  background: #f4eee9;
+}
+
+.annotation-tool.is-active {
+  color: var(--process-dark);
+  background: #fbe2d7;
+}
+
+.annotation-tool svg,
+.toolbar-icon-button svg,
+.annotation-done svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+
+.toolbar-icon-button {
+  width: 38px;
+  padding: 7px;
+}
+
+.toolbar-icon-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.34;
+}
+
+.toolbar-separator {
+  width: 1px;
+  height: 26px;
+  flex: 0 0 auto;
+  margin-inline: 2px;
+  background: var(--line);
+}
+
+.annotation-colors {
+  gap: 7px;
+  padding-inline: 3px;
+}
+
+.color-swatch {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 4px solid var(--paper);
+  border-radius: 6px;
+  background: var(--swatch-color);
+  box-shadow: 0 0 0 1px var(--line-strong);
+}
+
+.color-swatch.is-active {
+  box-shadow:
+    0 0 0 1px var(--paper),
+    0 0 0 3px var(--process);
+}
+
+.stroke-control {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 7px;
+  color: var(--muted-ink);
+  font-size: 12px;
+  font-weight: 560;
+}
+
+.stroke-control select {
+  min-height: 34px;
+  appearance: none;
+  padding: 5px 31px 5px 11px;
+  border: 1px solid var(--line-strong);
+  border-radius: 7px;
+  color: var(--ink);
+  background-color: var(--paper);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='m3 4.5 3 3 3-3' stroke='%2317211d' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 11px center;
+  background-size: 12px;
+  font: inherit;
+}
+
+.annotation-finish-actions {
+  margin-left: 4px;
+}
+
+.annotation-done {
+  min-width: 76px;
+  color: #fff;
+  background: var(--process);
+}
+
+.annotation-done:hover {
+  background: var(--process-dark);
   transform: translateY(-1px);
 }
 
@@ -262,6 +436,72 @@ a {
   display: block;
   width: 100%;
   height: auto;
+}
+
+.proof-image-wrap.is-editing {
+  outline: 2px solid color-mix(in srgb, var(--process) 72%, transparent);
+  outline-offset: 5px;
+}
+
+.annotation-overlay {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.annotation-overlay.is-editing {
+  pointer-events: auto;
+}
+
+.annotation-overlay.is-drawing {
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.annotation-overlay.is-editing:not(.is-drawing) {
+  cursor: default;
+  touch-action: pan-y;
+}
+
+.annotation-shape {
+  pointer-events: none;
+}
+
+.annotation-overlay.is-editing:not(.is-drawing) .annotation-shape {
+  cursor: move;
+  pointer-events: all;
+}
+
+.annotation-hit-area {
+  fill: transparent;
+  stroke: transparent;
+  stroke-width: 12px;
+  vector-effect: non-scaling-stroke;
+}
+
+.annotation-selection > rect:first-child {
+  fill: none;
+  stroke: var(--process);
+  stroke-dasharray: 6 4;
+  stroke-width: 1.5px;
+  vector-effect: non-scaling-stroke;
+}
+
+.annotation-handle {
+  cursor: nwse-resize;
+  fill: var(--paper);
+  stroke: var(--process);
+  stroke-width: 1.5px;
+  vector-effect: non-scaling-stroke;
+}
+
+.annotation-handle:nth-of-type(3),
+.annotation-handle:nth-of-type(4) {
+  cursor: nesw-resize;
 }
 
 .crop-marks i {
@@ -514,6 +754,10 @@ a {
   .metadata-item:nth-child(n + 5):not(:last-child) {
     display: none;
   }
+
+  .annotation-toolbar-inner {
+    justify-content: flex-start;
+  }
 }
 
 @media (max-width: 680px) {
@@ -542,6 +786,97 @@ a {
     height: 1px;
     overflow: hidden;
     clip: rect(0 0 0 0);
+  }
+
+  .annotation-toolbar {
+    top: 58px;
+  }
+
+  .annotation-toolbar-inner {
+    min-height: 94px;
+    display: grid;
+    grid-template-areas:
+      'tools tools finish'
+      'colors width history';
+    grid-template-columns: auto auto 1fr;
+    gap: 5px 9px;
+    padding: 6px 12px;
+    overflow-x: visible;
+  }
+
+  .annotation-tool-group {
+    grid-area: tools;
+  }
+
+  .annotation-colors {
+    grid-area: colors;
+    padding-inline: 0;
+  }
+
+  .stroke-control {
+    grid-area: width;
+  }
+
+  .annotation-history-actions {
+    grid-area: history;
+    justify-self: end;
+  }
+
+  .annotation-finish-actions {
+    grid-area: finish;
+    justify-self: end;
+  }
+
+  .annotation-toolbar .toolbar-separator {
+    display: none;
+  }
+
+  .annotation-tool,
+  .toolbar-icon-button,
+  .annotation-cancel,
+  .annotation-done {
+    min-height: 36px;
+  }
+
+  .annotation-tool {
+    width: 34px;
+    padding: 7px;
+  }
+
+  .annotation-tool span,
+  .stroke-control > span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .stroke-control {
+    gap: 0;
+  }
+
+  .stroke-control select {
+    width: 88px;
+  }
+
+  .toolbar-icon-button {
+    width: 34px;
+    min-height: 34px;
+  }
+
+  .color-swatch {
+    width: 22px;
+    height: 22px;
+  }
+
+  .annotation-cancel {
+    padding-inline: 7px;
+  }
+
+  .annotation-done {
+    min-width: 66px;
+    padding-inline: 8px;
   }
 
   .proof-stage {
@@ -587,6 +922,35 @@ a {
 @media (max-width: 420px) {
   .brand span {
     display: none;
+  }
+}
+
+@media (max-width: 360px) {
+  .annotation-toolbar-inner {
+    gap: 5px 6px;
+    padding-inline: 8px;
+  }
+
+  .annotation-tool,
+  .toolbar-icon-button {
+    width: 32px;
+  }
+
+  .annotation-colors {
+    gap: 4px;
+  }
+
+  .color-swatch {
+    width: 20px;
+    height: 20px;
+  }
+
+  .stroke-control select {
+    width: 82px;
+  }
+
+  .annotation-done {
+    min-width: 62px;
   }
 }
 

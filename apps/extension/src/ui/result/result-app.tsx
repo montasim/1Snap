@@ -1,4 +1,16 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  commitAnnotation,
+  createAnnotationDocument,
+  createAnnotationHistory,
+  isAnnotationDocument,
+  redoAnnotation,
+  undoAnnotation,
+  type Annotation,
+  type AnnotationColor,
+  type AnnotationHistory,
+  type AnnotationTool,
+} from '../../application/annotation-model';
 import type { CaptureRecord } from '../../application/capture-model';
 import {
   chooseRulerInterval,
@@ -6,9 +18,15 @@ import {
   makeCaptureFilename,
 } from '../../application/capture-plan';
 import { stitchCapture } from '../../application/stitch-capture';
+import { renderAnnotatedPng } from '../../application/render-annotations';
+import {
+  getAnnotationDocument,
+  saveAnnotationDocument,
+} from '../../infrastructure/annotation-store';
 import { getCapture } from '../../infrastructure/capture-store';
 import { Brand } from '../brand';
 import {
+  AnnotateIcon,
   CheckIcon,
   CloseIcon,
   CoffeeIcon,
@@ -17,6 +35,8 @@ import {
   FramesIcon,
   GlobeIcon,
 } from '../icons';
+import { AnnotationOverlay } from './annotation-overlay';
+import { AnnotationToolbar } from './annotation-toolbar';
 
 const SUPPORT_URL = 'https://www.supportkori.com/montasim';
 
@@ -43,6 +63,21 @@ export function ResultApp() {
     return initialError ? { status: 'error', message: initialError } : { status: 'loading' };
   });
   const [notice, setNotice] = useState('');
+  const [annotations, setAnnotations] = useState<AnnotationHistory>(() =>
+    createAnnotationHistory(createAnnotationDocument(1, 1)),
+  );
+  const [isAnnotating, setIsAnnotating] = useState(false);
+  const [annotationTool, setAnnotationTool] = useState<AnnotationTool>('border');
+  const [annotationColor, setAnnotationColor] = useState<AnnotationColor>('#c74924');
+  const [annotationWidth, setAnnotationWidth] = useState(6);
+  const [selectedAnnotationId, setSelectedAnnotationId] = useState<string | null>(null);
+  const [annotatedFileSize, setAnnotatedFileSize] = useState<number | null>(null);
+  const annotationBaseline = useRef<AnnotationHistory | null>(null);
+  const exportCache = useRef<{
+    document: AnnotationHistory['present'];
+    blob: Blob;
+    url: string;
+  } | null>(null);
 
   useEffect(() => {
     if (state.status === 'error') return;
@@ -61,10 +96,21 @@ export function ResultApp() {
       .then(async (record) => {
         if (!record)
           throw new Error('This local capture is no longer available. Capture the page again.');
-        const stitched = await stitchCapture(record);
+        const [stitched, storedAnnotations] = await Promise.all([
+          stitchCapture(record),
+          getAnnotationDocument(captureId).catch(() => null),
+        ]);
         objectUrl = URL.createObjectURL(stitched.blob);
         if (!cancelled) {
-          document.title = `${record.pageTitle} · 1Snap`;
+          const annotationDocument = isAnnotationDocument(
+            storedAnnotations,
+            stitched.width,
+            stitched.height,
+          )
+            ? storedAnnotations
+            : createAnnotationDocument(stitched.width, stitched.height);
+          window.document.title = `${record.pageTitle} · 1Snap`;
+          setAnnotations(createAnnotationHistory(annotationDocument));
           setState({
             status: 'ready',
             capture: {
@@ -94,41 +140,189 @@ export function ResultApp() {
     };
   }, []);
 
+  const ready = state.status === 'ready' ? state.capture : null;
+  const annotationDocument = annotations.present;
+  const annotationCount = annotationDocument.items.length;
+
+  useEffect(() => {
+    if (!ready || annotationDocument.imageWidth !== ready.width) return;
+    const timeout = window.setTimeout(() => {
+      void saveAnnotationDocument(ready.record.id, annotationDocument).catch(() => {
+        setNotice('Annotations could not be saved locally. Copy or download before closing.');
+      });
+    }, 250);
+    return () => window.clearTimeout(timeout);
+  }, [annotationDocument, ready]);
+
+  useEffect(() => {
+    const cached = exportCache.current;
+    if (!cached || cached.document === annotationDocument) return;
+    URL.revokeObjectURL(cached.url);
+    exportCache.current = null;
+    setAnnotatedFileSize(null);
+  }, [annotationDocument]);
+
+  useEffect(
+    () => () => {
+      if (exportCache.current) URL.revokeObjectURL(exportCache.current.url);
+    },
+    [],
+  );
+
+  useEffect(() => {
+    if (
+      selectedAnnotationId &&
+      !annotationDocument.items.some((item) => item.id === selectedAnnotationId)
+    ) {
+      setSelectedAnnotationId(null);
+    }
+  }, [annotationDocument, selectedAnnotationId]);
+
+  useEffect(() => {
+    if (!isAnnotating) return;
+    function handleKeyboard(event: KeyboardEvent) {
+      const target = event.target as HTMLElement | null;
+      const isTyping = target?.matches('input, select, textarea');
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'z') {
+        event.preventDefault();
+        if (event.shiftKey) setAnnotations((history) => redoAnnotation(history));
+        else setAnnotations((history) => undoAnnotation(history));
+        return;
+      }
+      if (!isTyping && (event.key === 'Delete' || event.key === 'Backspace')) {
+        if (!selectedAnnotationId) return;
+        event.preventDefault();
+        setAnnotations((history) =>
+          commitAnnotation(history, { type: 'remove', id: selectedAnnotationId }),
+        );
+        setSelectedAnnotationId(null);
+      }
+      if (!isTyping && event.key === 'Escape') {
+        setSelectedAnnotationId(null);
+        setAnnotationTool('select');
+      }
+    }
+    window.addEventListener('keydown', handleKeyboard);
+    return () => window.removeEventListener('keydown', handleKeyboard);
+  }, [isAnnotating, selectedAnnotationId]);
+
   async function copyImage(capture: ReadyCapture) {
     setNotice('');
     try {
-      await writeImageToClipboard(capture);
-      setNotice('Image copied');
+      const output = await prepareOutput(capture, annotationDocument);
+      await writeImageToClipboard(output.blob);
+      setNotice(annotationCount > 0 ? 'Annotated image copied' : 'Image copied');
     } catch {
       setNotice('Chrome could not copy this PNG. Download it instead.');
     }
   }
 
-  function startDownload(capture: ReadyCapture) {
+  function startDownload(capture: ReadyCapture, url: string, annotated: boolean) {
     const link = document.createElement('a');
-    link.href = capture.url;
-    link.download = makeCaptureFilename(
+    link.href = url;
+    const filename = makeCaptureFilename(
       capture.record.pageTitle,
       new Date(capture.record.createdAt),
     );
+    link.download = annotated ? filename.replace(/\.png$/i, '-annotated.png') : filename;
     link.click();
   }
 
-  function downloadImage(capture: ReadyCapture) {
-    startDownload(capture);
-    setNotice('Download started');
+  async function downloadImage(capture: ReadyCapture) {
+    try {
+      setNotice(annotationCount > 0 ? 'Preparing annotated PNG…' : 'Preparing download…');
+      const output = await prepareOutput(capture, annotationDocument);
+      startDownload(capture, output.url, annotationCount > 0);
+      setNotice(annotationCount > 0 ? 'Annotated download started' : 'Download started');
+    } catch {
+      setNotice('Chrome could not prepare this PNG. Try again.');
+    }
   }
 
-  const ready = state.status === 'ready' ? state.capture : null;
+  async function prepareOutput(
+    capture: ReadyCapture,
+    document: AnnotationHistory['present'],
+  ): Promise<{ blob: Blob; url: string }> {
+    if (document.items.length === 0) return { blob: capture.png, url: capture.url };
+    const cached = exportCache.current;
+    if (cached?.document === document) return { blob: cached.blob, url: cached.url };
+
+    const blob = await renderAnnotatedPng(capture.png, document);
+    const url = URL.createObjectURL(blob);
+    if (exportCache.current) URL.revokeObjectURL(exportCache.current.url);
+    exportCache.current = { document, blob, url };
+    setAnnotatedFileSize(blob.size);
+    return { blob, url };
+  }
+
+  function beginAnnotating() {
+    annotationBaseline.current = annotations;
+    setAnnotationTool('border');
+    setSelectedAnnotationId(null);
+    setIsAnnotating(true);
+    setNotice('Drag on the screenshot to add a border.');
+  }
+
+  function chooseAnnotationTool(tool: AnnotationTool) {
+    setAnnotationTool(tool);
+    if (tool !== 'select') setSelectedAnnotationId(null);
+    const instructions: Record<AnnotationTool, string> = {
+      select: 'Select an annotation to move, resize, or delete it.',
+      marker: 'Draw directly on the screenshot with the marker.',
+      highlight: 'Drag over an area to add a translucent highlight.',
+      border: 'Drag around an area to add a border.',
+    };
+    setNotice(instructions[tool]);
+  }
+
+  function cancelAnnotating() {
+    if (annotationBaseline.current) setAnnotations(annotationBaseline.current);
+    annotationBaseline.current = null;
+    setSelectedAnnotationId(null);
+    setIsAnnotating(false);
+    setNotice('Annotation changes cancelled');
+  }
+
+  async function finishAnnotating() {
+    annotationBaseline.current = null;
+    setSelectedAnnotationId(null);
+    setIsAnnotating(false);
+    if (!ready || annotationCount === 0) {
+      setNotice(annotationCount === 0 ? 'Annotation mode closed' : 'Annotations ready');
+      return;
+    }
+    try {
+      setNotice('Preparing annotated PNG…');
+      await prepareOutput(ready, annotationDocument);
+      setNotice(`${annotationCount} ${annotationCount === 1 ? 'annotation' : 'annotations'} ready`);
+    } catch {
+      setNotice('Annotations are visible, but the PNG could not be prepared yet.');
+    }
+  }
+
+  function addAnnotation(annotation: Annotation) {
+    setAnnotations((history) => commitAnnotation(history, { type: 'add', annotation }));
+    setSelectedAnnotationId(annotation.id);
+  }
+
+  function replaceAnnotation(annotation: Annotation) {
+    setAnnotations((history) => commitAnnotation(history, { type: 'replace', annotation }));
+  }
 
   return (
-    <main className="result-shell">
+    <main className={`result-shell${isAnnotating ? ' is-annotating' : ''}`}>
       <header className="result-header">
         <Brand />
         {ready ? (
           <div className="capture-summary" aria-label="Capture status">
-            <span className="ready-dot" />
-            <span>Capture ready</span>
+            <span className={`ready-dot${isAnnotating ? ' is-editing' : ''}`} />
+            <span>
+              {isAnnotating
+                ? 'Annotating'
+                : annotationCount > 0
+                  ? `${annotationCount} ${annotationCount === 1 ? 'annotation' : 'annotations'}`
+                  : 'Capture ready'}
+            </span>
             <span className="summary-rule" />
             <span className="summary-dimensions">
               {ready.width.toLocaleString()} × {ready.height.toLocaleString()}
@@ -139,6 +333,12 @@ export function ResultApp() {
           {ready ? (
             <>
               <ActionButton
+                label="Annotate"
+                icon={<AnnotateIcon />}
+                active={isAnnotating}
+                onClick={isAnnotating ? () => void finishAnnotating() : beginAnnotating}
+              />
+              <ActionButton
                 label="Copy"
                 icon={<CopyIcon />}
                 onClick={() => void copyImage(ready)}
@@ -146,7 +346,7 @@ export function ResultApp() {
               <ActionButton
                 label="Download"
                 icon={<DownloadIcon />}
-                onClick={() => downloadImage(ready)}
+                onClick={() => void downloadImage(ready)}
               />
               <span className="action-separator" aria-hidden="true" />
             </>
@@ -155,9 +355,45 @@ export function ResultApp() {
         </nav>
       </header>
 
+      {ready && isAnnotating ? (
+        <AnnotationToolbar
+          tool={annotationTool}
+          color={annotationColor}
+          strokeWidth={annotationWidth}
+          count={annotationCount}
+          canUndo={annotations.past.length > 0}
+          canRedo={annotations.future.length > 0}
+          onToolChange={chooseAnnotationTool}
+          onColorChange={setAnnotationColor}
+          onStrokeWidthChange={setAnnotationWidth}
+          onUndo={() => setAnnotations((history) => undoAnnotation(history))}
+          onRedo={() => setAnnotations((history) => redoAnnotation(history))}
+          onClear={() => {
+            setAnnotations((history) => commitAnnotation(history, { type: 'clear' }));
+            setSelectedAnnotationId(null);
+          }}
+          onCancel={cancelAnnotating}
+          onDone={() => void finishAnnotating()}
+        />
+      ) : null}
+
       {state.status === 'loading' ? <LoadingState /> : null}
       {state.status === 'error' ? <ErrorState message={state.message} /> : null}
-      {ready ? <Proof capture={ready} /> : null}
+      {ready ? (
+        <Proof
+          capture={ready}
+          annotations={annotationDocument}
+          editing={isAnnotating}
+          tool={annotationTool}
+          color={annotationColor}
+          displayStrokeWidth={annotationWidth}
+          selectedId={selectedAnnotationId}
+          outputSize={annotatedFileSize}
+          onSelect={setSelectedAnnotationId}
+          onAdd={addAnnotation}
+          onReplace={replaceAnnotation}
+        />
+      ) : null}
 
       {notice ? (
         <div className="notice" role="status">
@@ -183,24 +419,31 @@ function SupportAction() {
   );
 }
 
-async function writeImageToClipboard(capture: ReadyCapture): Promise<void> {
+async function writeImageToClipboard(png: Blob): Promise<void> {
   if (typeof ClipboardItem === 'undefined' || !navigator.clipboard?.write) {
     throw new Error('Image clipboard is unavailable.');
   }
-  await navigator.clipboard.write([new ClipboardItem({ 'image/png': capture.png })]);
+  await navigator.clipboard.write([new ClipboardItem({ 'image/png': png })]);
 }
 
 function ActionButton({
   label,
   icon,
   onClick,
+  active = false,
 }: {
   label: string;
   icon: React.ReactNode;
   onClick: () => void;
+  active?: boolean;
 }) {
   return (
-    <button className="action-button" type="button" onClick={onClick}>
+    <button
+      className={`action-button${active ? ' is-active' : ''}`}
+      type="button"
+      aria-pressed={active || undefined}
+      onClick={onClick}
+    >
       {icon}
       <span>{label}</span>
     </button>
@@ -235,7 +478,31 @@ function ErrorState({ message }: { message: string }) {
   );
 }
 
-function Proof({ capture }: { capture: ReadyCapture }) {
+function Proof({
+  capture,
+  annotations,
+  editing,
+  tool,
+  color,
+  displayStrokeWidth,
+  selectedId,
+  outputSize,
+  onSelect,
+  onAdd,
+  onReplace,
+}: {
+  capture: ReadyCapture;
+  annotations: AnnotationHistory['present'];
+  editing: boolean;
+  tool: AnnotationTool;
+  color: AnnotationColor;
+  displayStrokeWidth: number;
+  selectedId: string | null;
+  outputSize: number | null;
+  onSelect: (id: string | null) => void;
+  onAdd: (annotation: Annotation) => void;
+  onReplace: (annotation: Annotation) => void;
+}) {
   const { record } = capture;
   const marks = useMemo(() => {
     const interval = chooseRulerInterval(capture.height);
@@ -256,13 +523,24 @@ function Proof({ capture }: { capture: ReadyCapture }) {
               </li>
             ))}
           </ol>
-          <div className="proof-image-wrap">
+          <div className={`proof-image-wrap${editing ? ' is-editing' : ''}`}>
             <CropMarks />
             <RegistrationMark className="registration-top-left" />
             <RegistrationMark className="registration-top-right" />
             <RegistrationMark className="registration-bottom-left" />
             <RegistrationMark className="registration-bottom-right" />
             <img src={capture.url} alt={`Full-page capture of ${record.pageTitle}`} />
+            <AnnotationOverlay
+              document={annotations}
+              editing={editing}
+              tool={tool}
+              color={color}
+              displayStrokeWidth={displayStrokeWidth}
+              selectedId={selectedId}
+              onSelect={onSelect}
+              onAdd={onAdd}
+              onReplace={onReplace}
+            />
           </div>
         </div>
       </section>
@@ -280,10 +558,12 @@ function Proof({ capture }: { capture: ReadyCapture }) {
         </MetadataItem>
         <MetadataItem>{capture.height.toLocaleString()} px</MetadataItem>
         <MetadataItem>PNG</MetadataItem>
-        <MetadataItem>{formatBytes(capture.png.size)}</MetadataItem>
+        <MetadataItem>{formatBytes(outputSize ?? capture.png.size)}</MetadataItem>
         <MetadataItem>{formatCaptureTime(record.createdAt)}</MetadataItem>
         <MetadataItem icon={<CheckIcon />} tone="green">
-          Capture ready
+          {annotations.items.length > 0
+            ? `${annotations.items.length} ${annotations.items.length === 1 ? 'annotation' : 'annotations'} ready`
+            : 'Capture ready'}
         </MetadataItem>
       </footer>
     </>
