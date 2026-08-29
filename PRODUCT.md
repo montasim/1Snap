@@ -29,7 +29,8 @@ The primary workflow starts from a normal Chrome tab. The user clicks the 1Snap 
 ## Capabilities and Constraints
 
 - Capture the full vertical length of the active regular web page at the current viewport width.
-- Create a PNG result page with inspect, copy, and download actions.
+- Create a PNG result page with inspect, non-destructive annotation, copy, and download actions.
+- Mark a capture with freehand strokes, translucent highlights, or measured borders while keeping the original PNG unchanged.
 - Keep captures local to the browser; no account, analytics, upload, or remote processing is required.
 - Use only the permissions needed for capture, local storage, and download behavior.
 - Restore the page's original scroll position and temporarily changed presentation after capture.

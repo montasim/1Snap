@@ -293,6 +293,12 @@ The ruler is generated from real output height, uses IBM Plex Mono with tabular 
 
 The real stitched PNG is a block-level responsive image inside a square Warm Paper sheet. The screenshot—not a decorative browser mockup—owns the stage. The sheet carries the structural proof shadow, registration targets, and crop marks but no extra border under the shadow.
 
+### Annotation Tool Rail & Overlay
+
+Annotation mode adds one compact sticky tool rail beneath the result header without displacing the screenshot as the primary object. Select, Marker, Highlight, and Border use the same authored square-stroke icon family as result actions. Capture Orange identifies the active tool, selection outline, and default annotation color; the restrained palette adds marker yellow, Stop Red, and Press Ink only as literal mark colors. Color swatches are low-radius squares, controls remain 36–38px high, and Done is the single filled Capture Orange action.
+
+Annotations remain vector geometry over the proof while editing and are composed into the original-resolution PNG only for Copy or Download. Selection handles are square, the original screenshot remains immutable, and a horizontally scrollable tool rail preserves all controls on narrow screens without floating over the captured image. Touch drawing disables page movement only while a drawing tool is active; Select restores vertical panning.
+
 ### Metadata Rail
 
 The fixed 64px footer segments frame count, source, dimensions, height, format, file size, time, and final state with strong 1px rules. Values use tabular numbers; the primary Capture Orange modifier identifies source and capture facts, while Proof Green identifies completion. At narrow widths, disclosure collapses instead of wrapping the rail into cards.
