@@ -1,5 +1,5 @@
-const supportUrl = 'https://www.supportkori.com/montasim';
-const releaseUrl = 'https://github.com/montasim/1Snap/releases/latest';
+export const supportUrl = 'https://www.supportkori.com/montasim';
+export const releaseUrl = 'https://github.com/montasim/1Snap/releases/latest';
 
 const captureSteps = [
   {
@@ -207,35 +207,22 @@ export function LandingPage() {
         </section>
       </main>
 
-      <footer className="site-footer">
-        <div className="page-shell footer-inner">
-          <div>
-            <Brand />
-            <p>Full-page screenshots, stitched locally in Chrome.</p>
-          </div>
-          <nav aria-label="Footer navigation">
-            <a href="#how-it-works">How it works</a>
-            <a href="#privacy">Privacy</a>
-            <a href={releaseUrl}>Download</a>
-            <a href={supportUrl} target="_blank" rel="noreferrer">
-              Support
-            </a>
-          </nav>
-        </div>
-      </footer>
+      <SiteFooter />
     </>
   );
 }
 
-function SiteHeader() {
+export function SiteHeader({ homeHref = '#top' }: { homeHref?: string }) {
+  const sectionPrefix = homeHref === '#top' ? '' : '/';
+
   return (
     <header className="site-header">
       <div className="page-shell header-inner">
-        <Brand />
+        <Brand href={homeHref} />
         <nav aria-label="Main navigation">
-          <a href="#how-it-works">How it works</a>
-          <a href="#result">Result page</a>
-          <a href="#privacy">Privacy</a>
+          <a href={`${sectionPrefix}#how-it-works`}>How it works</a>
+          <a href={`${sectionPrefix}#result`}>Result page</a>
+          <a href={`${sectionPrefix}#privacy`}>Privacy</a>
         </nav>
         <a className="header-cta" href={releaseUrl}>
           Download 1Snap
@@ -245,12 +232,35 @@ function SiteHeader() {
   );
 }
 
-function Brand() {
+export function Brand({ href = '#top' }: { href?: string }) {
   return (
-    <a className="site-brand" href="#top" aria-label="1Snap home">
+    <a className="site-brand" href={href} aria-label="1Snap home">
       <img src="/brand/1snap-mark.svg" alt="" width="34" height="34" />
       <span>1Snap</span>
     </a>
+  );
+}
+
+export function SiteFooter({ homeHref = '#top' }: { homeHref?: string }) {
+  const sectionPrefix = homeHref === '#top' ? '' : '/';
+
+  return (
+    <footer className="site-footer">
+      <div className="page-shell footer-inner">
+        <div>
+          <Brand href={homeHref} />
+          <p>Full-page screenshots, stitched locally in Chrome.</p>
+        </div>
+        <nav aria-label="Footer navigation">
+          <a href={`${sectionPrefix}#how-it-works`}>How it works</a>
+          <a href={`${sectionPrefix}#privacy`}>Privacy</a>
+          <a href={releaseUrl}>Download</a>
+          <a href={supportUrl} target="_blank" rel="noreferrer">
+            Support
+          </a>
+        </nav>
+      </div>
+    </footer>
   );
 }
 

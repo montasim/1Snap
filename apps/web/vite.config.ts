@@ -8,6 +8,11 @@ const siteUrl = (
 ).replace(/\/+$/, '');
 
 export default defineConfig({
+  build: {
+    rollupOptions: {
+      input: ['index.html', '404.html', '500.html'],
+    },
+  },
   plugins: [
     react(),
     {
