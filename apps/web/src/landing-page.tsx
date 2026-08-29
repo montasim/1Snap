@@ -12,11 +12,15 @@ const captureSteps = [
   },
   {
     title: 'Keep one PNG',
-    text: 'Inspect the finished image, copy it, or download it with a clear filename.',
+    text: 'Inspect the finished image, mark what matters, then copy or download it.',
   },
 ];
 
 const resultActions = [
+  {
+    title: 'Annotate',
+    text: 'Highlight a detail, draw with a marker, or frame an area before keeping the PNG.',
+  },
   {
     title: 'Inspect',
     text: 'Check where the image came from, when it was captured, and its dimensions and file size.',
@@ -44,7 +48,7 @@ export function LandingPage() {
               <span>One screenshot.</span>
             </h1>
             <p className="hero-summary">
-              1Snap scrolls, stitches, and opens a clean PNG you can inspect, copy, or download.
+              1Snap scrolls, stitches, and opens a clean PNG you can mark, copy, or download.
             </p>
             <div className="hero-actions">
               <a className="button button-primary" href={releaseUrl}>
@@ -67,15 +71,15 @@ export function LandingPage() {
               </div>
               <img
                 src="/screenshots/1snap-result.png"
-                alt="1Snap result page showing a complete captured page with copy and download actions"
+                alt="1Snap result page showing border, highlight, and marker annotations on a full-page screenshot"
                 width="1268"
                 height="713"
                 fetchPriority="high"
               />
             </div>
             <figcaption>
-              <strong>The complete page stays visible.</strong>
-              <span>No editor, account, or cloud upload in the way.</span>
+              <strong>Mark the details that matter.</strong>
+              <span>Highlight, outline, or draw before you copy or download.</span>
             </figcaption>
           </figure>
         </section>
@@ -92,7 +96,7 @@ export function LandingPage() {
             </p>
             <p>
               <strong>Ready as a PNG</strong>
-              Copy it or save it right away.
+              Annotate, copy, or save it right away.
             </p>
           </div>
         </section>
@@ -121,19 +125,21 @@ export function LandingPage() {
             <figure className="result-visual">
               <img
                 src="/screenshots/1snap-result.png"
-                alt="1Snap screenshot result with capture dimensions and file details"
+                alt="1Snap annotation workspace with capture dimensions, drawing tools, and file details"
                 width="1268"
                 height="713"
                 loading="lazy"
               />
-              <figcaption>Copy and Download stay close to the finished image.</figcaption>
+              <figcaption>
+                Annotate, Copy, and Download stay close to the finished image.
+              </figcaption>
             </figure>
 
             <div className="result-copy">
               <h2>The screenshot is the workspace.</h2>
               <p>
-                The result tab is built around the image. Everything else helps you verify and keep
-                it.
+                The result tab is built around the image. Everything else helps you mark, verify,
+                and keep it.
               </p>
               <div className="result-actions" aria-label="Result page actions">
                 {resultActions.map((action) => (
